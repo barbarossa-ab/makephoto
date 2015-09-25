@@ -27,34 +27,12 @@ public class MakePhotoActivity extends Activity {
 
     private int             mCameraId = -1;
     private Camera          mCamera;
-    private Button          mSnapPhotoBtn;
-    private ImageView       mImage;
     private CameraPreview   mPreview;
-
-    private boolean safeToTakePicture = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_pick);
-
-        mSnapPhotoBtn = (Button) findViewById(R.id.captureFront);
-        mImage = (ImageView) findViewById(R.id.imageView);
-
-//        mSnapPhotoBtn.setOnClickListener(
-//                new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        if(mCamera != null && safeToTakePicture) {
-//                            mCamera.takePicture(null, null,
-//                                    new PhotoHandler(getApplicationContext()));
-//
-//                            safeToTakePicture = false;
-//                            Log.e(DEBUG_TAG, "Picture initiated");
-//                        }
-//                    }
-//                }
-//        );
 
         // do we have a camera?
         if (!getPackageManager()
@@ -128,7 +106,6 @@ public class MakePhotoActivity extends Activity {
     private void releaseCamera() {
         if (mCamera != null) {
             mCamera.stopPreview();
-//            mCamera.setPreviewCallback(null);
             FrameLayout preview = (FrameLayout) findViewById(R.id.cameraPreview);
             preview.removeView(mPreview);
             mCamera.release();
@@ -157,25 +134,10 @@ public class MakePhotoActivity extends Activity {
                 Log.d(MakePhotoActivity.DEBUG_TAG, "Can't create directory to save image.");
                 Toast.makeText(context, "Can't create directory to save image.",
                         Toast.LENGTH_LONG).show();
-//                return;
 
                 pictureFileDir = Environment
                         .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
             }
-
-            //Rotate the image
-//            int rotation = MakePhotoActivity.this.getWindowManager().getDefaultDisplay().getRotation();
-//
-//            int degrees = 0;
-//            switch (rotation) {
-//                case Surface.ROTATION_0: degrees = 270; break;
-//                case Surface.ROTATION_90: degrees = 0; break;
-//                case Surface.ROTATION_180: degrees = 90; break;
-//                case Surface.ROTATION_270: degrees = 180; break;
-//            }
-//
-//            bmp = RotateBitmap(bmp, degrees);
-
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyymmddhhmmss");
             String date = dateFormat.format(new Date());
@@ -191,12 +153,6 @@ public class MakePhotoActivity extends Activity {
                 fos.close();
                 Toast.makeText(context, "New Image saved:" + photoFile,
                         Toast.LENGTH_LONG).show();
-
-//                Bitmap myBitmap = BitmapFactory.decodeFile(pictureFile.getAbsolutePath());
-//                mImage.setImageBitmap(myBitmap);
-
-                safeToTakePicture = true;
-                mCamera.startPreview();
 
             } catch (Exception error) {
                 Log.d(MakePhotoActivity.DEBUG_TAG, "File" + filename + "not saved: "
@@ -274,7 +230,6 @@ public class MakePhotoActivity extends Activity {
 
                 mCamera.takePicture(null, null,
                         new PhotoHandler(getApplicationContext()));
-
 
             } catch (Exception e){
                 Log.d(DEBUG_TAG, "Error starting camera preview: " + e.getMessage());
